@@ -19,24 +19,88 @@
         bottom: 0;
         width: 100%;
     }
+     body {
+            background-color: #f5f5f5;
+        }
+        .login-container {
+            max-width: 400px;
+            margin: 80px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h3 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+        .main-div {
+            width: 100%;
+            padding: 20px;
+            margin-top: 30px;
+            /* min-height: calc(100vh - 70px);  */
+            display: flex;
+            justify-items: center;
+            vertical-align: middle;
+        }
+
+        .right-div{
+          width: 50%;
+
+        }
+
+        .left-div {
+          width: 50%;
+        }
  </style> 
 <body>
 
   <!-- Include header fragment -->
   <div th:replace="fragments/header :: header"></div>
 
-  <!-- Main Content -->
-  <div class="container text-center mt-5">
-    <h1 class="text-primary mb-4">Welcome to Expense Tracker</h1>
-    <p class="lead">
-      Manage your daily expenses, monitor spending trends, and stay on top of your budget.
-    </p>
+  <div class="container-fluid mt-4 main-div">
+          <!-- Main Content -->
+        <div class="container text-center mt-5 right-div ">
+          <h1 class="text-primary mb-4">Welcome to Expense Tracker</h1>
+          <p class="lead mt-3">
+            Manage your daily expenses, monitor spending trends, and stay on top of your budget.
+          </p>
 
-    <div class="mt-5">
-      <a href="#" class="btn btn-success btn-lg me-3">Add New Expense</a>
-      <a href="#" class="btn btn-outline-primary btn-lg">View Reports</a>
-    </div>
+          <div class="mt-5">
+            <a href="#" class="btn btn-success btn-lg me-3">Add New Expense</a>
+            <a href="#" class="btn btn-outline-primary btn-lg">View Reports</a>
+          </div>
+        </div>
+
+
+          
+      <div class="login-container left-div mt-3" >
+          <h3>Login</h3>
+          <form th:action="@{/login}" method="post">
+              <div class="mb-3">
+                  <label for="email" class="form-label">Email address</label>
+                  <input type="email" class="form-control" id="email" name="email"
+                        placeholder="Enter your email" required />
+              </div>
+
+              <div class="mb-3">
+                  <label for="pwd" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="pwd"
+                        name="pwd" placeholder="Enter password" required />
+              </div>
+
+              <div class="d-grid">
+                  <button type="submit" class="btn btn-primary">Login</button>
+              </div>
+
+              <div class="text-center mt-3">
+                  <small>Don’t have an account? <a href="#">Register</a></small>
+              </div>
+          </form>
+      </div>
   </div>
+ 
   <div th:replace="fragments/footer :: footer"></div>
 
   <!-- Bootstrap JS -->
