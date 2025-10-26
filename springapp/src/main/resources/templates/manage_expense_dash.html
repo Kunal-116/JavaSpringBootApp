@@ -23,11 +23,30 @@
     
 </style>
 <body>
-      <div th:replace="fragments/header :: header"></div>
-    <h2>Expense Dashboard</h2>
-    <p>✅ This page loaded successfully!</p>
+    <div th:replace="fragments/header :: header"></div>
 
+    <div class="mt-5 mx-3 d-flex justify-content-center">
+        <button class="btn btn-success mx-2"   id="addExpense"> Add New Expense</button>
+        <button class="btn btn-primary" id="viewExpenses"> View All Expenses</button>
+    </div>
+
+ <div class="sidebar stick"></div>
 
   <div th:replace="fragments/footer :: footer"></div>
+
+
+
+
+
+  
+    <script>
+        document.getElementById("addExpense").onclick = function () {
+            location.href = "/add_expense";
+        };
+        document.getElementById("viewExpenses").onclick = function () {
+            location.href = "/view_expenses";
+        };
+        </script>
+
 </body>
 </html>
