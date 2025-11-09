@@ -1,0 +1,10 @@
+ body {
+            background-color: #f5f5f5;
+        }
+        
+    .stick{
+        position: fixed !important;
+        bottom: 0;
+        width: 100%;
+    }
+    

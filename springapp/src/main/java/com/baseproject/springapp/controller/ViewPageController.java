@@ -19,4 +19,11 @@ public class ViewPageController {
         return "manage_expense_dash";
     }
 
+     @GetMapping("/register")
+    public String showRegistrationPage() {
+        // This returns the name of the Thymeleaf template
+        // (Spring automatically looks in /templates/)
+        return "registrationForm";
+    }
+
 }
