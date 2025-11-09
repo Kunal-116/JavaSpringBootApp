@@ -1,0 +1,5 @@
+# Ignore local configs and logs
+application.properties
+application.yml
+*.log
+logs/

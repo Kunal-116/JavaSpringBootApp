@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Registration & Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 2rem 3rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.7rem;
+      background: #007bff;
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .toggle {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .toggle a {
+      color: #007bff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .message {
+      margin-top: 1rem;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2 id="form-title">Register</h2>
+
+  <!-- Registration Form -->
+  <form id="register-form">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" placeholder="Enter username" required />
+    </div>
+     <div class="form-group">
+      <label for="usermobile">Mobile</label>
+      <input type="text" id="usermobile" maxlength="10" placeholder="Enter mobile number" required />
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Enter email" required />
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter password" required />
+    </div>
+    <button type="submit">Register</button>
+  </form>
+
+  <!-- Login Form -->
+  <form id="login-form" style="display:none;">
+    <div class="form-group">
+      <label for="login-username">Username</label>
+      <input type="text" id="login-username" name="u_mobile" placeholder="Enter username" required />
+    </div>
+    <div class="form-group">
+      <label for="login-password">Password</label>
+      <input type="password" id="login-password" name="u_password" placeholder="Enter password" required />
+    </div>
+    <button type="submit">Login</button>
+  </form>
+
+  <div class="toggle">
+    <span id="toggle-text">Already have an account? <a id="toggle-link">Login</a></span>
+  </div>
+
+  <div id="message" class="message"></div>
+</div>
+
+<script>
+  const registerForm = document.getElementById('register-form');
+  const loginForm = document.getElementById('login-form');
+  const formTitle = document.getElementById('form-title');
+  const toggleText = document.getElementById('toggle-text');
+  const toggleLink = document.getElementById('toggle-link');
+  const messageDiv = document.getElementById('message');
+
+  // Switch between Register and Login forms
+  toggleLink.addEventListener('click', () => {
+    if (registerForm.style.display === 'none') {
+      registerForm.style.display = 'block';
+      loginForm.style.display = 'none';
+      formTitle.textContent = 'Register';
+      toggleText.innerHTML = 'Already have an account? <a id="toggle-link">Login</a>';
+    } else {
+      registerForm.style.display = 'none';
+      loginForm.style.display = 'block';
+      formTitle.textContent = 'Login';
+      toggleText.innerHTML = 'Don’t have an account? <a id="toggle-link">Register</a>';
+    }
+  });
+
+  // Helper: Show message
+  function showMessage(msg, isSuccess = false) {
+    messageDiv.textContent = msg;
+    messageDiv.className = 'message ' + (isSuccess ? 'success' : 'error');
+  }
+
+  // Handle Registration Submit
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = {
+      username: document.getElementById('username').value,
+      usermobile:document.getElementById('usermobile').value,
+      email: document.getElementById('email').value,
+      password: document.getElementById('password').value
+    };
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const text = await response.text();
+      showMessage(text, response.ok);
+    } catch (err) {
+      showMessage('Error: ' + err.message);
+    }
+  });
+
+  // Handle Login Submit
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = {
+      username: document.getElementById('login-username').value,
+      password: document.getElementById('login-password').value
+    };
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const text = await response.text();
+      showMessage(text, response.ok);
+    } catch (err) {
+      showMessage('Error: ' + err.message);
+    }
+  });
+</script>
+</body>
+</html>

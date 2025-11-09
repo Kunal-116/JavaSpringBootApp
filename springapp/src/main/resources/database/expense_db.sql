@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS `tbl_users` (
     `login_status` ENUM('INACTIVE','ACTIVE') NOT NULL,
     `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     `delete_status` ENUM('0','1') NOT NULL DEFAULT '0',
+    `u_role`  VARCHAR(100) NOT NULL DEFAULT 'User',
     PRIMARY KEY (`user_id`) -- <<-- THIS WAS MISSING
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 -- --------------------------------------------------------
