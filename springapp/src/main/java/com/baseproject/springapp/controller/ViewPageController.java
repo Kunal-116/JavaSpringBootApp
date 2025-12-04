@@ -2,8 +2,8 @@ package com.baseproject.springapp.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import com.baseproject.springapp.model.UserExpense;
-import com.baseproject.springapp.repository.CategoryRepository;
+// import com.baseproject.springapp.model.UserExpense;
+// import com.baseproject.springapp.repository.CategoryRepository;
 @Controller
 public class ViewPageController {
 
