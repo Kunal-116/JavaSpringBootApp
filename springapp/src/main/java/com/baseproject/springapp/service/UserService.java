@@ -1,6 +1,6 @@
 package com.baseproject.springapp.service;
 
-import java.util.Optional;
+// import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,7 +11,7 @@ import com.baseproject.springapp.dto.LoginRequest;
 import com.baseproject.springapp.dto.RegistrationRequest;
 import com.baseproject.springapp.model.AppUsers;
 import com.baseproject.springapp.repository.UserRepository;
-import com.baseproject.springapp.util.KeyedHashUtil;
+// import com.baseproject.springapp.util.KeyedHashUtil;
 
 @Service
 public class UserService {

@@ -6,7 +6,7 @@ package com.baseproject.springapp.util;
 import java.security.Key;
 import java.util.Date;
 
-import org.hibernate.annotations.Comments;
+// import org.hibernate.annotations.Comments;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;

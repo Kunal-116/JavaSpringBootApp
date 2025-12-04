@@ -1,7 +1,7 @@
 package com.baseproject.springapp.config;
 
 import com.baseproject.springapp.filter.JwtAuthenticationFilter;
-import com.baseproject.springapp.service.CustomUserDetailsService;
+// import com.baseproject.springapp.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,8 +22,8 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    // @Autowired
+    // private CustomUserDetailsService customUserDetailsService;
 
     // 1️⃣ Password encoder bean
     @Bean
@@ -47,7 +47,7 @@ public class SecurityConfig {
                         "/",
                         "/register",
         "/api/auth/register",
-        "/api/auth/login"
+        "/api/auth/login", "/manageExpenses",  "/api/categories", "/api/expmgmt/**"
 ).permitAll()
 .anyRequest().authenticated()               // All other routes need JWT
                 )
