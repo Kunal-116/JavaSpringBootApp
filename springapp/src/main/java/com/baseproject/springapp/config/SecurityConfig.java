@@ -43,15 +43,16 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for APIs
                 .authorizeHttpRequests(auth -> auth
-                     .requestMatchers(
-                        "/",
-                        "/register",
-        "/api/auth/register",
-        "/api/auth/login", "/manageExpenses",  "/api/categories", "/api/expmgmt/**"
-).permitAll()
-.anyRequest().authenticated()               // All other routes need JWT
+                        .requestMatchers(
+                                "/",
+                                "/register",
+                                "/api/auth/register",
+                                "/api/auth/login", "/manageExpenses", "/api/categories", "/api/expmgmt/**")
+                        .permitAll()
+                        .anyRequest().authenticated() // All other routes need JWT
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // No sessions
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // No
+                                                                                                              // sessions
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
 
         return http.build();

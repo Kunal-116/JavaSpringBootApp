@@ -248,7 +248,7 @@
         const formData = $(form).serialize();
 
         $.ajax({
-          url: $(form).attr("action"),   // /add_expense from th:action
+          url: $(form).attr("action"),   // /api/expmgmt/add_expense
           method: "POST",
           data: formData,
           success: function (response) {
