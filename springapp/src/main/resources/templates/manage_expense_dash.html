@@ -279,6 +279,43 @@
         }
       });
     });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // This check will redirect the user if the token is missing.
+        if (checkAuthentication()) {
+            // If authenticated, maybe load the default view or fetch initial data
+            // fetchExpenses(); 
+        }
+    });
+
+    document.getElementById('logoutButton').addEventListener('click', function() {
+  
+    fetch('/api/auth/logout', {
+        method: 'POST',
+       
+        credentials: 'include' 
+    })
+    .then(response => {
+        if (response.ok) {
+          
+            console.log("Logout successful");
+            alert("You have been successfully logged out!");
+            
+      
+            window.location.href = '/register'; 
+            
+        } else {
+        
+            console.error("Logout failed with status:", response.status);
+            alert("Logout failed. Please try again.");
+        }
+    })
+    .catch(error => {
+
+        console.error('Network error during logout:', error);
+        alert("A network error occurred.");
+    });
+});
   </script>
 
 

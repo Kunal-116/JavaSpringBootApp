@@ -3,6 +3,8 @@ package com.baseproject.springapp.service;
 // import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
@@ -11,67 +13,59 @@ import com.baseproject.springapp.dto.LoginRequest;
 import com.baseproject.springapp.dto.RegistrationRequest;
 import com.baseproject.springapp.model.AppUsers;
 import com.baseproject.springapp.repository.UserRepository;
-// import com.baseproject.springapp.util.KeyedHashUtil;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final String pepper;
+    private final String pepper; // The injected secret pepper
 
     public UserService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder,
-                       @Value("${app.security.pepper}") String pepper) {
+                        PasswordEncoder passwordEncoder,
+                        @Value("${app.security.pepper}") String pepper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.pepper = pepper;
+        this.pepper = "ExPence78874@";
     }
 
     @Transactional
     public AppUsers registerNewUser(RegistrationRequest request) {
-        // basic checks
         if (userRepository.existsByumobile(request.getUsermobile())) {
-            throw new IllegalArgumentException("Username already taken");
+            throw new IllegalArgumentException("Mobile number already taken");
         }
-        // if (userRepository.existsByUname(request.getEmail())) {
-        //     throw new IllegalArgumentException("Email already in use");
-        // }
 
-        // Combine password + pepper
+        // ✅ REGISTRATION: Combine raw password + pepper before hashing
         String passwordPlusPepper = request.getPassword() + pepper;
-
-        // Hash using BCrypt
         String hashed = passwordEncoder.encode(passwordPlusPepper);
 
-        // Create your AppUsers entity (not Spring's User)
         AppUsers user = new AppUsers();
         user.setUname(request.getUsername());
-       user.setUmobile(request.getUsermobile());
+        user.setUmobile(request.getUsermobile());
         user.setEmail(request.getEmail());
-        user.setPassword(hashed);
+        user.setPassword(hashed); // Store Hash(Password + Pepper)
 
         return userRepository.save(user);
     }
 
-    // 🔐 LOGIN FUNCTION (this is where your line goes)
-  public boolean authenticateUser(LoginRequest request) {
+    // 🔐 LOGIN FUNCTION: Authenticate user and retrieve object for JWT generation
+    public AppUsers authenticateAndRetrieveUser(LoginRequest request) {
+        
+        // 1. Fetch the user by mobile number
+        AppUsers user = userRepository.findByumobile(request.getMobile())
+            // Throw Spring Security exception if not found
+            .orElseThrow(() -> new UsernameNotFoundException("User not found for mobile: " + request.getMobile()));
 
-    AppUsers user = userRepository.findByumobile(request.getMobile())
-            .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-    String rawPasswordPlusPepper = request.getPassword() + pepper;
-
-    if (!passwordEncoder.matches(rawPasswordPlusPepper, user.getPassword())) {
-        throw new IllegalArgumentException("Invalid password");
+        // 2. Prepare the incoming password by adding the same pepper
+        String pepperedPassword = request.getPassword() + this.pepper;
+        
+        // 3. Verify: Check if Hash(Input Password + Pepper) matches Stored Hash
+        if (!passwordEncoder.matches(pepperedPassword, user.getPassword())) {
+            // Throw Spring Security exception on failure
+            throw new BadCredentialsException("Invalid password"); 
+        }
+        
+        // 4. Return the full user object on success
+        return user;
     }
-
-    return true;
-}
-
-    //   public boolean validateUserCredentials(String mobile, String password) {
-    //     return userRepository.findByUmobile(mobile)
-    //         .map(user -> KeyedHashUtil.verifyPassword(password, user.getPassword()))
-    //         .orElse(false);
-    // }
 }

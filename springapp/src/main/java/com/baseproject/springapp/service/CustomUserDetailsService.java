@@ -19,15 +19,27 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.repo = repo;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String UMobile) throws UsernameNotFoundException {
-        AppUsers user = repo.findByumobile(UMobile)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with mobile: " + UMobile));
+   @Override
+    public UserDetails loadUserByUsername(String mobile) throws UsernameNotFoundException {
+        // 🔑 FIX: Change userRepository to repo (the name of the injected variable)
+        AppUsers user = repo.findByumobile(mobile) 
+             .orElseThrow(() -> new UsernameNotFoundException("User not found with mobile: " + mobile));
 
-        var authorities = Arrays.stream(user.getRole().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        // 🔑 CRITICAL FIX: Handle the null role defensively
+        String userRoles = user.getRole();
+        if (userRoles == null || userRoles.trim().isEmpty()) {
+            // Assign a default role if none is found, or throw an error if a role is mandatory
+            userRoles = "ROLE_USER"; // Default to a safe role if null
+        }
 
-        return new User(user.getUmobile(), user.getPassword(), authorities);
+        // Now safely split the role string
+        return new User(
+                user.getUmobile(),
+                user.getPassword(),
+                Arrays.stream(userRoles.split(","))
+                        .map(String::trim) // Trim spaces just in case
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList())
+        );
     }
 }
