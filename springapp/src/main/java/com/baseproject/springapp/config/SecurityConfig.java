@@ -60,7 +60,6 @@
 
 // }
 
-
 package com.baseproject.springapp.config;
 
 import com.baseproject.springapp.filter.JwtAuthenticationFilter;
@@ -102,27 +101,27 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            .csrf(csrf -> csrf.disable()) // CSRF is disabled for API/Stateless communication
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                   
-                    "/", "/register", "/login","/logout", 
-                    
-                    "/api/auth/register",
-                    "/api/auth/login",
-                    "/api/auth/logout", // Must be permitted to clear the cookie
-                    
-                  
-                    "/error" 
-                ).permitAll()
-                
-                .anyRequest().authenticated() 
-            )
-            .logout(logout -> logout.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            
-           
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf(csrf -> csrf.disable()) // CSRF is disabled for API/Stateless communication
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+
+                                "/", "/register", "/login", "/logout",
+
+                                "/api/auth/register",
+                                "/api/auth/login",
+                                "/api/auth/logout", // Must be permitted to clear the cookie
+
+                                "/error",
+                                "/manageExpenses", 
+                                "/api/categories", 
+                                "/api/expmgmt/**")
+                        .permitAll()
+
+                        .anyRequest().authenticated())
+                .logout(logout -> logout.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
