@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class LoginRequest {
 
-    @JsonProperty("username")
+    // @JsonProperty("username")
     private String mobile;
 
-    @JsonProperty("password")
+    // @JsonProperty("password")
     private String password;
 
     public String getMobile() { return mobile; }

@@ -119,14 +119,40 @@
     const addSection = document.getElementById("addExpenseSection");
     const viewSection = document.getElementById("viewExpensesSection");
 
+    function checkAuthentication() {
+        const token = localStorage.getItem('jwtToken');
+
+        if (!token) {
+            // If no token, redirect to login page immediately
+            console.log("No token found. Redirecting to login.");
+            window.location.href = '/login'; 
+            return false;
+        }
+
+        // We could theoretically fetch a lightweight protected endpoint here 
+        // to verify the token, but for simplicity, we assume if the token exists, 
+        // the user is authenticated for now. The API calls below will handle 401/403.
+        return true;
+    }
+
     addExpenseLink.addEventListener("click", () => {
+      if (!checkAuthentication()) return;
       addSection.classList.remove("d-none");
       viewSection.classList.add("d-none");
     });
 
     viewExpensesLink.addEventListener("click", () => {
+      if (!checkAuthentication()) return;
       viewSection.classList.remove("d-none");
       addSection.classList.add("d-none");
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // This check will redirect the user if the token is missing.
+        if (checkAuthentication()) {
+            // If authenticated, maybe load the default view or fetch initial data
+            // fetchExpenses(); 
+        }
     });
   </script>
 </body>

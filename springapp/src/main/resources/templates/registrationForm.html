@@ -141,6 +141,9 @@
   const toggleText = document.getElementById('toggle-text');
   const toggleLink = document.getElementById('toggle-link');
   const messageDiv = document.getElementById('message');
+  
+  var jwtTocken=localStorage.getItem('jwtToken');
+  alert(jwtTocken);
 
   // Switch between Register and Login forms
   toggleLink.addEventListener('click', () => {
@@ -186,24 +189,47 @@
   });
 
   // Handle Login Submit
-  loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const data = {
-      username: document.getElementById('login-username').value,
-      password: document.getElementById('login-password').value
-    };
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      const text = await response.text();
-      showMessage(text, response.ok);
-    } catch (err) {
-      showMessage('Error: ' + err.message);
-    }
-  });
+    
+    // ✅ CRITICAL: This is the desired AJAX/JS login handler
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Stop standard form submission
+        
+        // Collect data based on input IDs
+        const data = {
+            // Map HTML input value to DTO field name (e.g., 'mobile')
+            mobile: document.getElementById('login-username').value, 
+            password: document.getElementById('login-password').value
+        };
+        
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            
+            if (response.ok) {
+               const authResponse = await response.json(); 
+                // Assuming your backend sends the token in a field named 'token'
+                const token = authResponse.token; 
+                
+                // 1. Store the token securely
+                localStorage.setItem('jwtToken', token);
+                
+                showMessage('Login successful! Redirecting...', true);
+                
+                // 2. Redirect the browser
+                window.location.href = '/manageExpenses'; 
+                
+            } else {
+                const errorText = await response.text();
+                // If 401, display error message
+                showMessage(errorText || 'Login failed. Invalid credentials.', false);
+            }
+        } catch (err) {
+            showMessage('Network error: Could not connect to server.', false);
+        }
+    });
 </script>
 </body>
 </html>
