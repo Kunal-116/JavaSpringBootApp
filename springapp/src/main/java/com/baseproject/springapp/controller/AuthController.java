@@ -66,6 +66,9 @@ import com.baseproject.springapp.util.CookieUtil;
 import com.baseproject.springapp.util.JwtUtil;
 import com.baseproject.springapp.service.UserService;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -100,9 +103,8 @@ public class AuthController {
         }
     }
 
-    // ✅ CRITICAL: Manual Login method returns JWT token
+
    @PostMapping("/login")
-// 🔑 CRITICAL: Inject HttpServletResponse to set the cookie
 public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletResponse response) {
     try {
         System.out.println(request);
@@ -112,12 +114,12 @@ public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletRes
         // 2. Generate JWT token, passing the required arguments
         String token = jwtUtil.generateToken(user.getUmobile(), user.getId()); 
         
-        // 3. 🔑 CRITICAL: Set the JWT in an HTTP-Only Cookie
         CookieUtil.create(response, token);
+       Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("token", token);
+        responseBody.put("message", "Login successful");
         
-        // 4. Return a minimal success response (NO token in the body)
-        // Since the token is in the cookie, the frontend just needs a 200 OK.
-        return ResponseEntity.ok("Login successful"); 
+        return ResponseEntity.ok(responseBody);
         
     } catch (UsernameNotFoundException | BadCredentialsException e) {
         // Handle specific authentication failures
@@ -131,7 +133,7 @@ public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletRes
 
 @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletResponse response) {
-        // CRITICAL: Clear the cookie on the client side
+       
         CookieUtil.clear(response);
         return ResponseEntity.ok("Successfully logged out");
     }

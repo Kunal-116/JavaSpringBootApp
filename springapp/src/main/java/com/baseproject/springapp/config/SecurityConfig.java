@@ -105,26 +105,23 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // CSRF is disabled for API/Stateless communication
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    // ✅ Public Views
-                    "/", "/register", "/login", 
+                   
+                    "/", "/register", "/login","/logout", 
                     
-                    // ✅ Public API Endpoints (Login/Register/Logout)
                     "/api/auth/register",
                     "/api/auth/login",
                     "/api/auth/logout", // Must be permitted to clear the cookie
                     
-                    // ✅ CRITICAL: Allow anonymous access to the default error path
+                  
                     "/error" 
                 ).permitAll()
                 
-                // 🛑 All other requests, including /manageExpenses and all /api/expenses/*, 
-                //    require a valid JWT (sent via the HTTP-Only Cookie).
                 .anyRequest().authenticated() 
             )
-            // CRITICAL: Set session policy to STATELESS for JWT
+            .logout(logout -> logout.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             
-            // CRITICAL: Add your JWT filter to process the cookie before the standard Spring filter
+           
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

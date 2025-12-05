@@ -133,7 +133,7 @@
 
   <div id="message" class="message"></div>
 </div>
-
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
   const registerForm = document.getElementById('register-form');
   const loginForm = document.getElementById('login-form');
@@ -191,7 +191,7 @@
   // Handle Login Submit
     
     // ✅ CRITICAL: This is the desired AJAX/JS login handler
-    loginForm.addEventListener('submit', async (e) => {
+    loginForm.addEventListener('submit', (e) => {
         e.preventDefault(); // Stop standard form submission
         
         // Collect data based on input IDs
@@ -201,34 +201,35 @@
             password: document.getElementById('login-password').value
         };
         
-        try {
-            const response = await fetch('/api/auth/login', {
+        $.ajax({
+         url:'/api/auth/login', 
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            
-            if (response.ok) {
-               const authResponse = await response.json(); 
-                // Assuming your backend sends the token in a field named 'token'
-                const token = authResponse.token; 
+               contentType: 'application/json',
+                data: JSON.stringify(data),
+                success:function(response)
+                {
+          const token = response.token; 
                 
-                // 1. Store the token securely
-                localStorage.setItem('jwtToken', token);
-                
-                showMessage('Login successful! Redirecting...', true);
-                
-                // 2. Redirect the browser
-                window.location.href = '/manageExpenses'; 
-                
-            } else {
-                const errorText = await response.text();
-                // If 401, display error message
+                if (token) {
+                    // 1. Store the token securely
+                    localStorage.setItem('jwtToken', token);
+                    
+                    showMessage('Login successful! Redirecting...', true);
+                    
+                    // 2. Redirect the browser
+                    window.location.href = '/manageExpenses'; 
+                } else {
+                     // Handle case where status is 200 but response structure is unexpected
+                     showMessage('Login failed. Server response missing token.', false);
+                }
+            },
+            error: function(xhr, status, error) {
+                // jQuery error fires if the HTTP status is outside 200-299 (like 400 or 401)
+                const errorText = xhr.responseText; // Get the error message from the response body
                 showMessage(errorText || 'Login failed. Invalid credentials.', false);
-            }
-        } catch (err) {
-            showMessage('Network error: Could not connect to server.', false);
-        }
+          }
+        });
+        
     });
 </script>
 </body>

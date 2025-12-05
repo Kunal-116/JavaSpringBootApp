@@ -85,7 +85,7 @@ public class ViewPageController {
     public String manageExpenses(Model model) { // ⬅️ Added Model to pass data
 
         Long userId = null;
-        // 🔑 FIX: Authentication is now resolved
+        
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated()) {
@@ -103,9 +103,9 @@ public class ViewPageController {
                 
                 if (userIdObject instanceof Long) {
                     userId = (Long) userIdObject;
-                    System.out.println("✅ Logged-in User ID (from Map): " + userId);
+                    System.out.println("Logged-in User ID (from Map): " + userId);
                     
-                    // 🔑 Action: Pass the ID to the frontend model
+                   
                     model.addAttribute("currentUserId", userId); 
                 } else {
                     System.err.println("User ID found in map, but is not a Long. Actual type: " + (userIdObject != null ? userIdObject.getClass().getSimpleName() : "null"));
