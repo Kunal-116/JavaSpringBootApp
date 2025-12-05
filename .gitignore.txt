@@ -1,5 +1,51 @@
-# Ignore local configs and logs
+# ----------------------------------------------------------------------
+# 1. IDE and Build Artifacts (Essential to Ignore)
+# ----------------------------------------------------------------------
+# Compiled class files
+*.class
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+# Maven
+/target/
+pom.xml.tag
+pom.xml.bak
+pom.xml.versions
+pom.xml.next
+
+# Gradle
+.gradle/
+/build/
+
+# IDE Files (IntelliJ, VS Code, Eclipse)
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.project
+.classpath
+
+# ----------------------------------------------------------------------
+# 2. Local Configuration Files (Your request)
+# ----------------------------------------------------------------------
+# Application Configuration (Local/Development Overrides)
 application.properties
 application.yml
+application.json
+application-dev.properties
+application-dev.yml
+
+# Spring DevTools remote secret (used for remote restart)
+.spring-boot-devtools.properties
+
+# ----------------------------------------------------------------------
+# 3. Logs and Output (Your request)
+# ----------------------------------------------------------------------
 *.log
 logs/
+/log/
+temp/
