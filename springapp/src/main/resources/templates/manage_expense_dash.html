@@ -125,7 +125,22 @@
     <!-- View Expense Placeholder -->
     <div id="viewExpensesSection" class="form-container d-none">
       <h3 class="text-center text-primary mb-4">All Expenses</h3>
-      <p class="text-muted text-center">No expenses found. (This section will show table later)</p>
+
+      <p class="text-muted text-center d-none">No expenses found. (This section will show table later)</p>
+      <div class="container mt-2">
+        <table class="table table-bordered table-striped" id="exp_tbl">
+          <thead>
+            <tr>
+              <th>Sr. No.</th>
+              <th>Date</th>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+           
+          </tbody> 
     </div>
   </div>
 
@@ -135,6 +150,9 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+
 
 <!-- Your custom SCRIPT goes here -->
 <script>
@@ -316,9 +334,72 @@
         alert("A network error occurred.");
     });
 });
+
+let expTable;
+
+function initDataTable() {
+    expTable = $('#exp_tbl').DataTable({
+        columns: [
+            { data: null },             // will generate index
+            { data: 'expenseDate' },
+            { data: 'categoryId' },
+            { data: 'amount' },
+            { data: 'note' }
+        ],
+        columnDefs: [
+            {
+                targets: 0,
+                render: function (data, type, row, meta) {
+                    return meta.row + 1;   // serial number
+                }
+            },
+            {
+                targets: 3,      // amount column
+                render: function (data) {
+                    return parseFloat(data).toFixed(2);
+                }
+            }
+        ]
+    });
+}
+$(document).ready(function () {
+    initDataTable();
+});
+
+
+function loadExpenses() {
+
+    $.ajax({
+        url: "/api/expmgmt/loadUserExpenses",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ userId: 1 }),
+
+        success: function (data) {
+
+            if (!data || data.length === 0) {
+                $('#viewExpensesSection .text-muted').removeClass('d-none');
+                $('#exp_tbl').addClass('d-none');
+                return;
+            }
+
+            $('#viewExpensesSection .text-muted').addClass('d-none');
+            $('#exp_tbl').removeClass('d-none');
+
+            // clear old data and load new data
+            expTable.clear();
+            expTable.rows.add(data);
+            expTable.draw();
+        },
+
+        error: function (xhr, status, err) {
+            Swal.fire("Error", "Failed to load expenses", "error");
+        }
+    });
+}
+
+
   </script>
-
-
 </body>
 
 </html>
