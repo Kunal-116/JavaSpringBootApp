@@ -4,12 +4,17 @@ import com.baseproject.springapp.model.UserExpense;
 import com.baseproject.springapp.repository.ExpenseRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 // import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Map;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -41,4 +46,13 @@ public class ExpenseController {
 
         return "redirect:/manageExpenses";
     }
+
+    
+@PostMapping("/loadUserExpenses")
+public List<UserExpense> loadUserExpenses(@RequestBody Map<String, Long> request) {
+    Long userId = request.get("userId");
+    return expenseRepository.findByUserId(userId);
+}
+
+    
 }
