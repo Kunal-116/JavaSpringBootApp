@@ -364,8 +364,13 @@ function initDataTable() {
 }
 $(document).ready(function () {
     initDataTable();
+     
 });
 
+
+$('#viewExpensesLink').on('click', function () {
+    loadExpenses();
+});
 
 function loadExpenses() {
 
