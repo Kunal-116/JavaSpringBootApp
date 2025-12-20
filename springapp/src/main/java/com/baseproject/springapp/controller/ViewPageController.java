@@ -1,43 +1,3 @@
-// package com.baseproject.springapp.controller;
-
-// import org.springframework.stereotype.Controller;
-// import org.springframework.web.bind.annotation.GetMapping;
-
-// import jakarta.servlet.http.HttpSession;
-
-// @Controller
-// public class ViewPageController {
-
-//     @GetMapping("/")
-//     public String home() {
-       
-//          System.out.println("✅ Home page called");
-//         return "index";
-//     }
-
-//    @GetMapping("/manageExpenses")
-// public String manageExpenses(HttpSession session) {
-
-//     Object user = session.getAttribute("LOGGED_IN_USER");
-
-//     if (user == null) {
-//         return "redirect:/register"; // Not logged in → redirect
-//     }
-
-//      System.out.println("✅ Expense dashboard page called");
-//         return "manage_expense_dash";
-// }
-
-
-//      @GetMapping("/register")
-//     public String showRegistrationPage() {
-//         // This returns the name of the Thymeleaf template
-//         // (Spring automatically looks in /templates/)
-//         return "registrationForm";
-//     }
-
-// }
-
 
 // ViewPageController.java (Updated for MVC views)
 
@@ -59,9 +19,7 @@ import java.util.HashMap; // Required if you use new HashMap()
 @Controller
 public class ViewPageController {
     
-    // The UserService dependency must be removed from the constructor 
-    // or added back as a field if it's not used in this class.
-    // Assuming you meant to use the JwtUtil.
+    
     private final JwtUtil jwtUtil;
 
     public ViewPageController(JwtUtil jwtUtil) {
