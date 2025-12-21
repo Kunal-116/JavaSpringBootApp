@@ -49,3 +49,6 @@ application-dev.yml
 logs/
 /log/
 temp/
+/target/
+**/target/
+*.class
