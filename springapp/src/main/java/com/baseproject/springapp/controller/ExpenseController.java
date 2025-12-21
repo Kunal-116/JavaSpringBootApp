@@ -4,9 +4,11 @@ import com.baseproject.springapp.model.UserExpense;
 import com.baseproject.springapp.repository.ExpenseRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
 // import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +17,7 @@ import java.util.List;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import com.baseproject.springapp.util.SecurityUtil;
-
+import com.baseproject.springapp.dto.ExpenseUpdateRequest;
 
 @RestController
 @RequestMapping("/api/expmgmt")
@@ -51,13 +53,47 @@ public String addExpense(
 }
 
 
-   @PostMapping("/loadUserExpenses")
+ @PostMapping("/loadUserExpenses")
 public List<UserExpense> loadUserExpenses() {
 
-    Long userId = securityUtil.getLoggedInUserId(); 
+    Long userId = securityUtil.getLoggedInUserId();
 
-    return expenseRepository.findByUserId(userId);
+    return expenseRepository.findByUserIdAndDeleteStatus(userId, "0");
 }
 
+
+
+  @PutMapping("/updateExpense")
+    public void update(@RequestBody ExpenseUpdateRequest req) {
+
+        Long userId = securityUtil.getLoggedInUserId();
+
+        UserExpense exp = expenseRepository
+            .findByExpenseIdAndUserId(req.getExpenseId(), userId)
+            .orElseThrow(() -> new RuntimeException("User Not found"));
+
+        exp.setAmount(req.getAmount());
+        exp.setCategoryId(req.getCategoryId());
+        exp.setExpenseDate(req.getExpenseDate());
+        exp.setNote(req.getDescription());
+
+
+        expenseRepository.save(exp);
+    }
+    
+
+    @DeleteMapping("/deleteExpense")
+    public void deleteExpense(@RequestBody ExpenseUpdateRequest req) {
+
+        Long userId = securityUtil.getLoggedInUserId();
+
+        UserExpense exp = expenseRepository
+            .findByExpenseIdAndUserId(req.getExpenseId(), userId)
+            .orElseThrow(() -> new RuntimeException("Expense Not found"));
+
+        exp.setDeleteStatus("1");
+
+        expenseRepository.save(exp);
+    }   
     
 }
