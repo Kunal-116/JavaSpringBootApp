@@ -52,3 +52,17 @@ temp/
 /target/
 **/target/
 *.class
+# Maven
+target/
+
+# Logs
+*.log
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
