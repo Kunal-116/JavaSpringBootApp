@@ -26,7 +26,6 @@ public class SecurityUtil {
                 return (Long) userId;
             }
         }
-
         throw new RuntimeException("UserId not found in session");
     }
 }

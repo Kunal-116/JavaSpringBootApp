@@ -19,18 +19,31 @@ public class ViewPageController {
 
     @GetMapping("/register")
     public String showRegistrationPage() {
-        return "registrationForm";
+         try{
+        Long userId = securityUtil.getLoggedInUserId();
+        return "manage_expense_dash";
+        }
+        catch(Exception e)
+        {
+    return "registrationForm";
+        }
     }
 
     // Protected dashboard
     @GetMapping("/manageExpenses")
     public String manageExpenses(Model model) {
-
+      
+        try{
         Long userId = securityUtil.getLoggedInUserId();
 
         model.addAttribute("currentUserId", userId);
-
         return "manage_expense_dash";
+        }
+        catch(Exception e)
+        {
+    return "registrationForm";
+        }
+       
     }
 
 }
